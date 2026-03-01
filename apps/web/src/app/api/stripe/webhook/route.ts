@@ -268,19 +268,19 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       switch (event.type) {
         case "customer.subscription.created":
         case "customer.subscription.updated": {
-          const sub = event.data.object as StripeSubscriptionObject;
+          const sub = event.data.object as unknown as StripeSubscriptionObject;
           await handleSubscriptionUpsert(sub);
           break;
         }
 
         case "customer.subscription.deleted": {
-          const sub = event.data.object as StripeSubscriptionObject;
+          const sub = event.data.object as unknown as StripeSubscriptionObject;
           await handleSubscriptionDeleted(sub);
           break;
         }
 
         case "invoice.payment_failed": {
-          const invoice = event.data.object as StripeInvoiceObject;
+          const invoice = event.data.object as unknown as StripeInvoiceObject;
           // Mark subscription as past_due
           await db
             .update(subscriptions)
@@ -290,7 +290,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         }
 
         case "invoice.payment_succeeded": {
-          const invoice = event.data.object as StripeInvoiceObject;
+          const invoice = event.data.object as unknown as StripeInvoiceObject;
           // Re-activate subscription if it was past_due
           await db
             .update(subscriptions)
@@ -314,9 +314,5 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   return NextResponse.json({ received: true });
 }
 
-// Disable Next.js body parsing — Stripe requires the raw body for HMAC
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+// In Next.js App Router, body parsing is not automatic.
+// Raw body is read via request.text() in the handler above.
