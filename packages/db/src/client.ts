@@ -4,11 +4,9 @@ import * as schema from "./schema";
 
 const connectionString = process.env["DATABASE_URL"];
 
-if (!connectionString) {
-  throw new Error("DATABASE_URL environment variable is required");
-}
-
-const client = postgres(connectionString, {
+// Allow build-time module import without DATABASE_URL.
+// Queries will fail at runtime if the env var is truly missing.
+const client = postgres(connectionString ?? "postgres://localhost:5432/placeholder", {
   max: 10,
   idle_timeout: 30,
   connect_timeout: 10,
