@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
+import { ExportCSV } from "@/components/dashboard/export-csv";
 
 export const metadata: Metadata = {
   title: "Settings — MetricsHub",
@@ -38,10 +39,13 @@ export default async function SettingsPage() {
         </div>
       </div>
 
+      {/* CSV Export */}
+      <ExportCSV />
+
       {/* Coming soon */}
-      <div className="bg-[#1c2128] border border-[#30363d] rounded-xl p-5">
-        <h2 className="text-sm font-semibold text-white mb-2">Notifications & Billing</h2>
-        <p className="text-sm text-gray-500">Coming in a future sprint — email alerts, plan management, and more.</p>
+      <div className="bg-[#1c2128] border border-[#30363d] rounded-xl p-5 mt-4">
+        <h2 className="text-sm font-semibold text-white mb-2">Billing & Plan</h2>
+        <p className="text-sm text-gray-500">Coming in a future sprint — plan management, upgrades, and invoices.</p>
       </div>
     </div>
   );
